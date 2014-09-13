@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :singed_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: :destroy
 
@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
@@ -53,9 +54,9 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
-  def singed_in_user
-    redirect_to signin_url, notice: "Please sing in" unless sign_in?
-  end
+  # def singed_in_user
+  #   redirect_to signin_url, notice: "Please sing in" unless sign_in?
+  # end
 
   def correct_user
     @user = User.find(params[:id])
